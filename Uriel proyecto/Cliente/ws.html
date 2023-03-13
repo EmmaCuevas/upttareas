@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>prueba de websocket</title>
+		<script src="jquery-1.10.2.min.js"></script>
+	</head>
+	<body>
+	   <div id="content"></div>
+	</body>
+	 <script type="text/javascript">
+	 	$(function(){
+	 		var ws;
+	 		// Comprueba si el navegador admite webSocket
+	 		if("WebSocket" in window){
+	 			    $("#content").html("Su navegador es compatible con webSocket!");
+	 			    // La simulación genera clientID
+	 	 			let clientID = Math.ceil(Math.random()*100);	 			
+		 			
+		 			// ¡Crea un objeto WebSocket, presta atención a la ruta de solicitud! ! ! !
+		 			ws = new WebSocket("ws://localhost:8080/PruebaWS/testWebSocket/"+clientID);
+		 			
+		 			// se activa al establecer una conexión con el servidor
+		 			ws.onopen = function(){
+		 				 $("#content").append("<p> ¡La conexión con el servidor se estableció con éxito! Su ID de cliente ="+clientID+"</p>");
+		 				 
+		 				 // Simula el envío de datos al servidor
+		 				 ws.send("Hola servidor! Soy el cliente "+ clientID);
+		 			}
+		 			
+		 			// se activa cuando se recibe un mensaje del servidor
+		 			ws.onmessage = function (evt) { 
+		 				let received_msg = evt.data; 
+		 				 $("#content").append("<p> Mensaje recibido del servidor:"+received_msg+"</p>"); 
+		 			};
+		 			
+		 			// se activa cuando el servidor cierra la conexión
+		 			
+					
+					ws.onerror=function (evt) 
+     {//since there is an error, sockets will close so...
+       ws.onclose=function(e){
+           console.log("WebSocket Error: " , e);}}
+					
+					
+					
+	 		}else{
+	 			$("#content").html("¡Su navegador no es compatible con webSocket!");
+	 		}
+	 	})
+	 </script>
+</html>
+
